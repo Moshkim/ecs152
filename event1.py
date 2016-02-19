@@ -6,6 +6,7 @@ import math
 import random
 import Queue
 import simpy
+from collections import deque
 
 #MAXBUFFEE[2] = [1,20,50]
 
@@ -31,14 +32,14 @@ def main():
     env = simpy.Environment()
     current_time = env.now
 
-    arrival_event = Event(current_time)  #first arrival event
+    arrival_event = Event_Time(current_time)  #first arrival event
     next_arrival_time = current_time + arrival_Interval
 
     newpacket = Packet(neg_exp_dist_time(1))
     #Insert the event into the event list.
 
 
-
+    GEL = DoubleList()
     #arrival_event = Event()
     #departure_event = Event()
 
@@ -56,29 +57,33 @@ def main():
     if MAXBUFFER > 0:
         if q.empty():
             #transmission_time = newpacket.getTime()
-            departure_event = Event(current_time + newpacket.getTime(),None,None)
              #Insert the event at the right place in GEL
+            GEL.add(current_time + newpacket.getTime())
+
         elif length-1<MAXBUFFER:
             q.put(newpacket)
+
         else:
             packet_drop += 1
     else:
         if q.empty():
             #transmission_time = newpacket.getTime()
-            departure_event= Event(current_time + newpacket.getTime(),None,None)
              #Insert the event at the right place in GEL
+            GEL.add(current_time + newpacket.getTime())
+
         else:
             q.put(newpacket)
 
-
+'''I need to create new object and pass the node to GEL class'''
     #departure event occurs
     if length == 0:
 
     elif length > 0:
         q.get()
         #new departure event!
-        departure_event= Event(current_time + transmission_time)
+        departure_event_t = Event_Time(current_time + 'transmission_time')
         #Insert the event at the right place in GEL
+        GEL.add(current_time + 'transmission_time')
 
     #queue in here!
 
@@ -93,19 +98,17 @@ class Packet:
         return time
 
 
-'''Event Class'''
-class Event(object):
+
+'''Event-node Class'''
+class E_node(object):
 
     def __init__(self, time, prev, next):
         self.time = time
         self.prev = prev
         self.next = next
         return self
-
     def getTime():
         return time
-
-
 
 '''
 def departure_event(length):
@@ -137,7 +140,7 @@ class DoubleList(object):
     tail = None
 
     def add(self, time):
-        newnode = Event(time,None,None)
+        newnode = E_node(time,None,None)
         node = self.tail
 
         if self.head is None:
