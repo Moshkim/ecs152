@@ -5,7 +5,7 @@
 
 import math
 import random
-from queue import *
+import queue
 
 #MAXBUFFEE[2] = [1,20,50]
 
@@ -16,10 +16,10 @@ def main():
 
     #rate[6] =[0.1,0.25,0.4,0.55,0.65,0.8,0.9]
 
-    print("Enter the rate?")
-    arrival_rate = raw_input()
-    print("Enter the MAXBUFFER size?(-1 for infinite)")
-    MAXBUFFER = raw_input()
+
+    arrival_rate = input("Enter the rate?")
+
+    MAXBUFFER = input("Enter the MAXBUFFER size?(-1 for infinite)")
 
     #lamda = [0.1,0.25,0.4,0.55,0.65,0.8,0.9] when the buffer size is infinite
     #lamda = [0.2, 0.4, 0.6, 0.8, 0.9] when MAXBUFFER = 1, 20, and 50
@@ -28,8 +28,8 @@ def main():
 
     packet_drop = 0
     current_time = 0
-    q = Queue.Queue()
-    length = Queue.qsize()
+    q = queue.Queue()
+    length = q.qsize()
     GEL = DoubleList()
     transmission_Time = 0
 
@@ -86,7 +86,7 @@ def main():
     print("The number of the packet dropped is: ", packet_drop)
     print("Untilization time is: ",transmission_Time/current_time)
 
-
+if __name__ == '__main__': main()
 
 
 def neg_exp_dist_time(rate):
