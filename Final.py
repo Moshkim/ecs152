@@ -5,7 +5,7 @@
 
 import math
 import random
-import Queue
+from queue import *
 
 #MAXBUFFEE[2] = [1,20,50]
 
@@ -66,7 +66,7 @@ def main():
                     q.put(newpacket)
                     length += 1
 
-         elif current_node.arrival == False:
+        elif current_node.arrival == False:
             transmission_Time += current_node.arrival.getTime()
 
             length -= 1
@@ -130,7 +130,7 @@ class DoubleList(object):
         if self.head is None:
             self.head = self.tail = newnode
             return self
-        if self.tail.time < newnode.time
+        if self.tail.time < newnode.time:
             newnode.prev = self.tail
             newnode.next = None
             self.tail.next = newnode
@@ -139,7 +139,7 @@ class DoubleList(object):
         else:
             while node.time > newnode.time:
                 node = node.prev
-           if node.time < newnode.time:
+            if node.time < newnode.time:
                 newnode.next = node.next
                 node.next.prev = newnode
                 node.next = newnode
@@ -158,7 +158,7 @@ class DoubleList(object):
         print("printing all the time in sorted ordered:")
         current_node = self.head
         while current_node.next is not None:
-            print current_node.time
+            print(current_node.time)
             current_node = current_node.next
 
         print("End of the list, GEL")
