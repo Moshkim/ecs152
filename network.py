@@ -157,6 +157,8 @@ def main():
                 #Insert the departure event at the right place in GEL
                     length += 1
                     GEL.add(current_time + newpacket.getTime(),False)
+                    idle_period = current_time - server.server_start_idle
+                    server.addNumber(idle_period)
                     #print "create departure for finite maxbuffer event"
                 elif length-1 < MAXBUFFER:
                     q.put(newpacket)
