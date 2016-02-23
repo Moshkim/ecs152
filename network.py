@@ -182,7 +182,6 @@ def main():
             length -= 1
             if length == 0:
                 server.server_start_idle = current_time
-                continue
             elif length > 0:
                 departure_node =  q.get()
                 GEL.add(current_time + departure_node.getTime(),False)
@@ -190,7 +189,14 @@ def main():
         current_length = length
         area += previous_length * lamda
         previous_length = current_length
+   
+    MAXBUFFER_1 = MAXBUFFER+1
+    rho_0 = (arrival_rate/1)/(1-arrival_rate/1)
+    upper = 1-(MAXBUFFER_1+1)*pow((arrival_rate/1),MAXBUFFER_1) + MAXBUFFER_1*pow((arrival_rate/1),MAXBUFFER_1+1)
+    N_q = rho_0*upper/(1-pow((arrival_rate/1),MAXBUFFER_1+1))
 
+    print "theoretical mean queue for finite buffer: ",N_q
+    #p_i = ((arrival_rate/1)^i )*rho_0
     print "current_time is: ",current_time
     print "The number of the packet dropped is: ", packet_drop
     print "transmission_Time: ", transmission_Time
