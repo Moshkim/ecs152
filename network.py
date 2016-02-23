@@ -13,6 +13,23 @@ def neg_exp_dist_time(rate):
     u = random.uniform(0,1);
     return ((-1/rate)*math.log(1-u));
 
+'''Server Class'''
+class Server:
+    def __init__(self,start_idle, is_idle):
+        self.server_start_idle = start_idle
+        self.server_is_idle = is_idle
+        self.data = []
+
+    def addNumber(self,x):
+        self.data.append(x)
+
+    def sum(self):
+        n = len(self.data)
+        sum = 0
+        for i in self.data:
+            sum = sum + i
+        return sum
+
 
 '''Packet Class'''
 class Packet:
@@ -90,6 +107,7 @@ class DoubleList(object):
 
         print("End of the list, GEL")
 
+
 def main():
 
     '''initializing length = # of packets in the queue'''
@@ -114,6 +132,7 @@ def main():
     previous_time = 0
     previous_length = 0
     server_is_busy = 0
+    server = Server(0,0)
 
     '''the first arrival event'''
     GEL.add(current_time + neg_exp_dist_time(arrival_rate),True)
@@ -139,46 +158,42 @@ def main():
                     length += 1
                     GEL.add(current_time + newpacket.getTime(),False)
                     #print "create departure for finite maxbuffer event"
-
                 elif length-1 < MAXBUFFER:
                     q.put(newpacket)
                     length += 1
                 else:
                     packet_drop += 1
+                        
             elif MAXBUFFER == -1:
                 if length == 0:
                     length += 1
                     GEL.add(current_time + newpacket.getTime(),False)
+                    idle_period = current_time - server.server_start_idle
+                    server.addNumber(idle_period)
                     #print "create departure for infinite maxbuffer event"
                 else:
                     q.put(newpacket)
                     length += 1
-
         elif current_node.arrival == False:
             transmission_Time = current_node.getTime()
 
             length -= 1
             if length == 0:
+                server.server_start_idle = current_time
                 continue
             elif length > 0:
                 departure_node =  q.get()
                 GEL.add(current_time + departure_node.getTime(),False)
-
+        
         current_length = length
         area += previous_length * lamda
         previous_length = current_length
 
-            #1. get the first event from the GEL
-            #2. If the event is an arrival then process-arrival-event;
-            #3. Otherwise it must be a departure event and hence
-            #process-service-completion;
-
-            #output-statistics;
     print "current_time is: ",current_time
     print "The number of the packet dropped is: ", packet_drop
     print "transmission_Time: ", transmission_Time
     print "area: ", area
     print "Mean queue length: ", area/current_time
-    print "Untilization fraction is: ", transmission_Time/current_time
+    print "Untilization fraction is: ", (current_time - server.sum())/current_time
 
 if __name__ == '__main__': main()
